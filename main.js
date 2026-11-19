@@ -178,6 +178,7 @@
       y: groundY,
       vy: 0,
       onGround: true,
+      jumpsLeft: 2,                  // v0.0.2 — double-jump budget
       sliding: false,
       slideTimer: 0,
       invuln: 0,
@@ -200,9 +201,12 @@
   function jump() {
     if (state !== 'playing') return;
     if (runner.sliding) { runner.sliding = false; runner.slideTimer = 0; }
-    if (runner.onGround) {
-      runner.vy = JUMP_VEL;
+    // v0.0.2 — double-jump: 2 jumps per ground touch (1st full, 2nd 85% power)
+    if (runner.jumpsLeft > 0) {
+      runner.vy = runner.onGround ? JUMP_VEL : JUMP_VEL * 0.85;
       runner.onGround = false;
+      runner.jumpsLeft--;
+      if (window.MUX) MUX.bump();
     }
   }
 
@@ -226,6 +230,7 @@
         runner.y = groundY;
         runner.vy = 0;
         runner.onGround = true;
+        runner.jumpsLeft = 2;        // v0.0.2 — refill double-jump on landing
       }
     }
     if (runner.sliding) {
@@ -385,6 +390,7 @@
     else { hy = o.y; }
     burst(hx, hy, '#ff3b3b', 16);
     updateHullPips();
+    if (window.MUX) MUX.hit();
     if (runner.hull <= 0) endGame();
   }
 
@@ -848,6 +854,7 @@
   }
   function endGame() {
     state = 'gameover';
+    if (window.MUX) MUX.over();
     if (Math.floor(score) > best) {
       best = Math.floor(score);
       localStorage.setItem(BEST_KEY, String(best));
