@@ -1,0 +1,14 @@
+{
+  "name": "Nightshift Runner",
+  "short_name": "Nightshift",
+  "description": "A neon cyberpunk endless runner. Jump, slide and boost through the night city.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#060912",
+  "theme_color": "#060912",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

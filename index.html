@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#060912">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Nightshift Runner — a neon cyberpunk endless runner. Jump, slide and boost through the night city.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<title>Nightshift Runner</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+    <canvas id="game" aria-label="Nightshift Runner game canvas"></canvas>
+
+    <!-- Heads-up display -->
+    <div id="hud" class="hud hidden">
+      <div class="hud-left">
+        <span class="hud-label">SCORE</span>
+        <span id="score" class="hud-value">0</span>
+        <span class="hud-best">BEST <b id="best">0</b></span>
+      </div>
+      <button id="pause-btn" class="pause-btn" aria-label="Pause" title="Pause">II</button>
+      <div class="hud-right">
+        <div class="hud-hull">
+          <span class="hud-label">HULL</span>
+          <div id="hull-pips" class="pips"></div>
+        </div>
+        <div class="hud-charge">
+          <span class="hud-label">PULSE</span>
+          <div class="charge-track"><i id="charge-fill"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- On-screen controls (touch + mouse) -->
+    <div id="touch-controls" class="touch-controls hidden">
+      <button id="ctrl-slide" class="tc-btn" aria-label="Slide">SLIDE</button>
+      <button id="ctrl-boost" class="tc-btn tc-boost" aria-label="Boost">BOOST</button>
+      <button id="ctrl-jump" class="tc-btn" aria-label="Jump">JUMP</button>
+    </div>
+
+    <!-- Start screen -->
+    <section id="start-screen" class="screen active">
+      <div class="screen-inner">
+        <p class="tagline">THE CITY NEVER SLEEPS</p>
+        <h1 class="title">NIGHTSHIFT<br><span>RUNNER</span></h1>
+        <p class="subtitle">Outrun the neon. Jump the barriers, slide under the laser gates, boost through the endless night.</p>
+        <button id="play-btn" class="cta">PLAY</button>
+        <p class="best-line">BEST <b id="start-best">0</b></p>
+        <p class="hint">SPACE / UP — JUMP &nbsp;·&nbsp; DOWN — SLIDE &nbsp;·&nbsp; SHIFT — BOOST</p>
+      </div>
+    </section>
+
+    <!-- Pause screen -->
+    <section id="pause-screen" class="screen">
+      <div class="screen-inner">
+        <p class="tagline">RUN PAUSED</p>
+        <h2 class="title sm">PAUSED</h2>
+        <button id="resume-btn" class="cta">RESUME</button>
+        <button id="restart-btn" class="cta ghost">RESTART</button>
+        <button id="home-btn-pause" class="cta ghost">HOME</button>
+      </div>
+    </section>
+
+    <!-- Game over screen -->
+    <section id="gameover-screen" class="screen">
+      <div class="screen-inner">
+        <p class="tagline">RUN ENDED</p>
+        <h2 class="title sm">GAME OVER</h2>
+        <div class="result">
+          <div class="result-row"><span>SCORE</span><b id="final-score">0</b></div>
+          <div class="result-row"><span>DISTANCE</span><b id="final-distance">0 M</b></div>
+          <div class="result-row"><span>BEST</span><b id="final-best">0</b></div>
+        </div>
+        <button id="retry-btn" class="cta">RETRY</button>
+        <button id="home-btn" class="cta ghost">HOME</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>

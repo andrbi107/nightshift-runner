@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Nightshift Runner icon">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#070b1a"/>
+      <stop offset="0.55" stop-color="#0d1330"/>
+      <stop offset="1" stop-color="#1a0f38"/>
+    </linearGradient>
+    <radialGradient id="moonG" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#eef0ff"/>
+      <stop offset="0.7" stop-color="#c8d0f0"/>
+      <stop offset="1" stop-color="#9aa6d8"/>
+    </radialGradient>
+    <linearGradient id="neon" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00e5ff"/>
+      <stop offset="0.5" stop-color="#ff2d9b"/>
+      <stop offset="1" stop-color="#00e5ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#sky)"/>
+  <!-- stars -->
+  <g fill="#cfe0ff" opacity="0.7">
+    <rect x="40" y="50" width="2" height="2"/>
+    <rect x="120" y="80" width="2" height="2"/>
+    <rect x="200" y="40" width="2" height="2"/>
+    <rect x="300" y="70" width="2" height="2"/>
+    <rect x="460" y="60" width="2" height="2"/>
+    <rect x="80" y="160" width="2" height="2"/>
+    <rect x="250" y="150" width="2" height="2"/>
+  </g>
+  <!-- moon -->
+  <circle cx="372" cy="120" r="84" fill="#9aa6d8" opacity="0.10"/>
+  <circle cx="372" cy="120" r="48" fill="url(#moonG)"/>
+  <circle cx="356" cy="108" r="10" fill="#9aa6d8" opacity="0.35"/>
+  <circle cx="386" cy="134" r="7" fill="#9aa6d8" opacity="0.30"/>
+  <!-- far buildings -->
+  <g fill="#0c1230">
+    <rect x="6" y="300" width="64" height="120"/>
+    <rect x="76" y="262" width="48" height="158"/>
+    <rect x="130" y="320" width="72" height="100"/>
+    <rect x="430" y="284" width="58" height="136"/>
+    <rect x="492" y="312" width="24" height="108"/>
+  </g>
+  <!-- near buildings -->
+  <g fill="#111a3e">
+    <rect x="0" y="338" width="78" height="82"/>
+    <rect x="208" y="296" width="92" height="124"/>
+    <rect x="304" y="326" width="68" height="94"/>
+    <rect x="392" y="306" width="56" height="114"/>
+    <rect x="452" y="332" width="60" height="88"/>
+  </g>
+  <!-- lit windows yellow -->
+  <g fill="#ffd24a">
+    <rect x="12" y="312" width="5" height="7"/><rect x="24" y="312" width="5" height="7"/><rect x="12" y="328" width="5" height="7"/><rect x="36" y="328" width="5" height="7"/>
+    <rect x="82" y="276" width="5" height="7"/><rect x="94" y="276" width="5" height="7"/><rect x="82" y="294" width="5" height="7"/><rect x="106" y="294" width="5" height="7"/>
+    <rect x="214" y="310" width="5" height="7"/><rect x="226" y="310" width="5" height="7"/><rect x="238" y="310" width="5" height="7"/><rect x="214" y="328" width="5" height="7"/><rect x="250" y="328" width="5" height="7"/>
+    <rect x="310" y="340" width="5" height="7"/><rect x="322" y="340" width="5" height="7"/><rect x="354" y="340" width="5" height="7"/>
+    <rect x="398" y="320" width="5" height="7"/><rect x="410" y="320" width="5" height="7"/><rect x="422" y="338" width="5" height="7"/>
+    <rect x="458" y="346" width="5" height="7"/><rect x="482" y="346" width="5" height="7"/>
+  </g>
+  <!-- lit windows cyan -->
+  <g fill="#36e0ff">
+    <rect x="42" y="320" width="5" height="7"/><rect x="148" y="332" width="5" height="7"/><rect x="172" y="348" width="5" height="7"/>
+    <rect x="266" y="318" width="5" height="7"/><rect x="288" y="338" width="5" height="7"/>
+    <rect x="436" y="324" width="5" height="7"/><rect x="470" y="358" width="5" height="7"/>
+  </g>
+  <!-- street -->
+  <rect x="0" y="420" width="512" height="92" fill="#04050b"/>
+  <rect x="0" y="418" width="512" height="4" fill="url(#neon)"/>
+  <!-- runner silhouette (mid-stride) -->
+  <g transform="translate(150,420)">
+    <ellipse cx="0" cy="-2" rx="18" ry="4" fill="#00e5ff" opacity="0.12"/>
+    <rect x="-9" y="-44" width="18" height="30" rx="7" fill="#03040a"/>
+    <circle cx="0" cy="-52" r="9" fill="#03040a"/>
+    <rect x="-6" y="-54" width="12" height="3" fill="#00e5ff"/>
+    <rect x="-14" y="-40" width="4" height="15" rx="2" fill="#03040a" transform="rotate(22 -12 -33)"/>
+    <rect x="9" y="-40" width="4" height="15" rx="2" fill="#03040a" transform="rotate(-22 11 -33)"/>
+    <rect x="2" y="-16" width="5" height="20" rx="2" fill="#03040a" transform="rotate(-28 4 -6)"/>
+    <rect x="-7" y="-16" width="5" height="20" rx="2" fill="#03040a" transform="rotate(28 -5 -6)"/>
+  </g>
+</svg>
