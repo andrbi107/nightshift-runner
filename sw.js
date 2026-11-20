@@ -1,8 +1,9 @@
 /* Nightshift Runner service worker — precache shell, offline fallback */
-const CACHE = 'nightshift-runner-v3';
+const CACHE = 'nightshift-runner-v4';
 const ASSETS = [
   './',
   './index.html', './mobile-ux.js',
+  './vendor/howler.min.js','./gamekit.js','./vendor/sfx/shoot','./vendor/sfx/hit','./vendor/sfx/explode','./vendor/sfx/coin','./vendor/sfx/jump','./vendor/sfx/over','./vendor/sfx/start.wav',
   './styles.css',
   './main.js',
   './manifest.json',

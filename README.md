@@ -2,10 +2,10 @@
 
 > یک runner بی‌پایان نئون-سایبرپانک side-scroller با فیزیک jump/slide/boost و حفاظ hull — PWA با Vanilla JS.
 
-[![Version](https://img.shields.io/badge/version-v0.0.3-blue)](https://github.com/andrbi107/nightshift-runner/releases/tag/v0.0.3) [![PWA](https://img.shields.io/badge/PWA-installable-purple)](https://andrbi107.github.io/nightshift-runner/) [![No deps](https://img.shields.io/badge/dependencies-none-success)](https://github.com/andrbi107/nightshift-runner) [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![Version](https://img.shields.io/badge/version-v0.0.4-blue)](https://github.com/andrbi107/nightshift-runner/releases/tag/v0.0.4) [![PWA](https://img.shields.io/badge/PWA-installable-purple)](https://andrbi107.github.io/nightshift-runner/) [![deps](https://img.shields.io/badge/deps-Howler.js_local-blueviolet)](https://github.com/andrbi107/nightshift-runner) [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
 🎮 **[بازی کن](https://andrbi107.github.io/nightshift-runner/)** — نسخه‌ی آنلاین روی GitHub Pages
-📦 **[مخزن گیت‌هاب](https://github.com/andrbi107/nightshift-runner)** · 🏷️ **[Release v0.0.3](https://github.com/andrbi107/nightshift-runner/releases/tag/v0.0.3)**
+📦 **[مخزن گیت‌هاب](https://github.com/andrbi107/nightshift-runner)** · 🏷️ **[Release v0.0.4](https://github.com/andrbi107/nightshift-runner/releases/tag/v0.0.4)**
 
 ---
 
@@ -17,7 +17,15 @@
 
 ---
 
-## تغییرات v0.0.3 (جدید)
+## تغییرات v0.0.4 (جدید)
+
+**سکه‌های قابل‌جمع** (+۵ امتیاز) + powerup **Magnet** (۶s جذب سکه) + دستاوردهای Long Runner / Marathoner / Iron Runner.
+
+**همه‌ی بازی‌ها (v0.0.4)** — `gamekit.js` مشترک + `vendor/howler.min.js` محلی: صدای Howler با SFX خودکار (pickup/collision/game-over از طریق پل MUX)، صفحه‌ی **راهنما**، صفحه‌ی **تنظیمات** (قطع/وصل صدا)، قلاب‌های تست (`render_game_to_text`/`advanceTime`)، **فول‌اسکرین** (کلید F)، و سیستم **دستاوردها**. cache سرویس‌ورکر به v4 ارتقا یافت (آفلاین کامل با vendor).
+
+---
+
+## تغییرات v0.0.3
 
 **Nightshift Runner** — ارتفاع پرش کمتر شد (۱۲۶px) ولی تعداد پرش به ۳ رسید (با قدرت کاهشی ۱→۰.۸۲→۰.۶۸).
 

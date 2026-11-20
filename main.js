@@ -38,6 +38,14 @@
   const CHARGE_DRAIN = 50;       // charge drained per second while boosting
   const SCORE_PER_PX = 1 / 8;    // 1 point per ~8px scrolled
   const CORE_SCORE = 10;         // bonus score per energy core
+  // v0.0.5 — collectible coins + magnet powerup + distance milestones
+  const COIN_SCORE = 5;          // score per coin
+  const COIN_GAP_MIN = 170;      // px between coin spawns
+  const COIN_GAP_MAX = 320;
+  const MAGNET_INTERVAL = 25;    // seconds between magnet spawns
+  const MAGNET_DURATION = 6;     // seconds of magnet attraction
+  const MAGNET_PULL = 460;       // px/sec attraction toward runner
+  const METERS_PER_PX = 1 / 10;  // distance(px) -> displayed meters
 
   /* ---------- State ---------- */
   let W = 0, H = 0, dpr = 1, groundY = 0, scale = 1;
@@ -57,6 +65,10 @@
   let speedLines = [];
   let nextObstacleDist = 0;
   let nextCoreDist = 0;
+  let nextCoinDist = 0;          // v0.0.5 — coin spawn pacing
+  let magnetSpawnTimer = 0;      // v0.0.5 — seconds until next magnet pickup spawns
+  let magnetTimer = 0;           // v0.0.5 — seconds of active magnet attraction remaining
+  let milestonesHit = {};        // v0.0.5 — track one-shot distance achievements
   let layers = [];
   let stars = [];
   let moonX = 0, moonY = 0, moonR = 0;
@@ -289,6 +301,40 @@
       const gap = Math.max(170, 340 - distance * 0.018) + rand(0, 160);
       nextCoreDist = distance + gap;
     }
+    if (distance >= nextCoinDist) {            // v0.0.5 — coin pickups
+      spawnCoins();
+      nextCoinDist = distance + rand(COIN_GAP_MIN, COIN_GAP_MAX);
+    }
+  }
+
+  function spawnCoins() {                       // v0.0.5 — small gold coins floating at jump-height
+    const x = W + 60;
+    const n = 1 + Math.floor(Math.random() * 3);
+    const arc = Math.random() < 0.4;
+    const baseY = groundY - rand(86, 132) * scale;
+    for (let i = 0; i < n; i++) {
+      const cx = x + i * 30 * scale;
+      const cy = arc ? baseY - Math.sin((i / (n - 1 || 1)) * Math.PI) * 26 * scale : baseY;
+      collectibles.push({ type: 'coin', x: cx, y: cy, r: 7 * scale, phase: i * 0.5 });
+    }
+  }
+
+  function spawnMagnet() {                      // v0.0.5 — rare purple-star magnet powerup
+    const x = W + 60;
+    const y = groundY - rand(96, 138) * scale;
+    collectibles.push({ type: 'magnet', x: x, y: y, r: 12 * scale, phase: 0 });
+  }
+
+  function updateMagnet(dt) {                   // v0.0.5 — magnet timer + periodic spawn
+    if (magnetTimer > 0) {
+      magnetTimer -= dt;
+      if (magnetTimer < 0) magnetTimer = 0;
+    }
+    magnetSpawnTimer -= dt;
+    if (magnetSpawnTimer <= 0) {
+      spawnMagnet();
+      magnetSpawnTimer = MAGNET_INTERVAL + rand(-3, 5);
+    }
   }
 
   function spawnObstacle() {
@@ -352,8 +398,21 @@
     }
     for (let i = collectibles.length - 1; i >= 0; i--) {
       const c = collectibles[i];
-      c.x -= speed * dt;
       c.phase += dt * 5;
+      let scrolls = true;
+      if (magnetTimer > 0 && c.type === 'coin') {   // v0.0.5 — magnet pulls coins toward runner
+        const tx = runner.x;
+        const ty = runner.y - runner.h * 0.5;
+        const dx = tx - c.x, dy = ty - c.y;
+        const d = Math.hypot(dx, dy);
+        if (d > 1) {
+          const step = Math.min(d, MAGNET_PULL * dt);
+          c.x += (dx / d) * step;
+          c.y += (dy / d) * step;
+          scrolls = false;
+        }
+      }
+      if (scrolls) c.x -= speed * dt;
       if (c.x < -40) collectibles.splice(i, 1);
     }
   }
@@ -400,7 +459,15 @@
       score += CORE_SCORE;
       if (!boosting) pulseCharge = Math.min(CHARGE_MAX, pulseCharge + CHARGE_PER_CORE);
       burst(c.x, c.y, '#36e0ff', 9);
-    } else {
+    } else if (c.type === 'coin') {            // v0.0.5 — coin pickup
+      score += COIN_SCORE;
+      burst(c.x, c.y, '#ffd24a', 8);
+      if (window.MUX) MUX.bump();               // auto coin SFX via gamekit bridge
+    } else if (c.type === 'magnet') {          // v0.0.5 — magnet powerup
+      magnetTimer = MAGNET_DURATION;
+      burst(c.x, c.y, '#b14dff', 16);
+      if (window.MUX) MUX.bump();
+    } else { // shield
       if (runner.hull < HULL_MAX) { runner.hull += 1; updateHullPips(); }
       burst(c.x, c.y, '#27ff8a', 14);
     }
@@ -445,6 +512,23 @@
     chargeFillEl.classList.toggle('cooling', !boosting && boostCooldown > 0);
   }
 
+  /* ---------- Distance milestones (v0.0.5) ---------- */
+  function checkMilestones() {
+    const meters = Math.floor(distance * METERS_PER_PX);
+    if (meters >= 1000 && !milestonesHit.d1k) {
+      milestonesHit.d1k = true;
+      if (window.GK) GK.achievement('d1k', 'Long Runner', 'Reach 1000m');
+    }
+    if (meters >= 3000 && !milestonesHit.d3k) {
+      milestonesHit.d3k = true;
+      if (window.GK) GK.achievement('d3k', 'Marathoner', 'Reach 3000m');
+    }
+    if (meters >= 6000 && !milestonesHit.d6k) {
+      milestonesHit.d6k = true;
+      if (window.GK) GK.achievement('d6k', 'Iron Runner', 'Reach 6000m');
+    }
+  }
+
   /* ---------- Update ---------- */
   function update(dt) {
     if (state === 'playing') {
@@ -454,11 +538,13 @@
       runPhase += dt * (8 + speed * 0.02);
       updateRunner(dt);
       updateBoost(dt);
+      updateMagnet(dt);            // v0.0.5 — magnet timer + spawn
       updateObstacles(dt);
       updateParticles(dt);
       updateSpeedLines(dt);
       updateSpawns();
       checkCollisions();
+      checkMilestones();           // v0.0.5 — distance achievements
       for (const L of layers) updateLayer(L, dt, speed);
     } else {
       // menus: idle runner + slow ambient drift on the start screen
@@ -616,9 +702,32 @@
     for (const c of collectibles) {
       const pulse = 1 + 0.14 * Math.sin(c.phase);
       ctx.save();
-      ctx.shadowColor = c.type === 'core' ? '#36e0ff' : '#27ff8a';
-      ctx.shadowBlur = 16;
-      if (c.type === 'core') {
+      if (c.type === 'coin') {                  // v0.0.5 — small gold coin
+        ctx.shadowColor = '#ffd24a';
+        ctx.shadowBlur = 14;
+        ctx.fillStyle = '#ffd24a';
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r * pulse, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = 'rgba(255,250,210,0.95)';
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r * 0.42, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.type === 'magnet') {         // v0.0.5 — purple 5-point star
+        ctx.shadowColor = '#b14dff';
+        ctx.shadowBlur = 18;
+        ctx.fillStyle = '#b14dff';
+        drawStar(c.x, c.y, c.r * pulse * 1.25, c.r * pulse * 0.55, 5);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+        ctx.lineWidth = 2;
+        drawStar(c.x, c.y, c.r * pulse * 1.25, c.r * pulse * 0.55, 5);
+        ctx.stroke();
+      } else if (c.type === 'core') {
+        ctx.shadowColor = '#36e0ff';
+        ctx.shadowBlur = 16;
         ctx.fillStyle = '#36e0ff';
         ctx.beginPath();
         ctx.arc(c.x, c.y, c.r * pulse, 0, Math.PI * 2);
@@ -628,7 +737,9 @@
         ctx.beginPath();
         ctx.arc(c.x, c.y, c.r * 0.4, 0, Math.PI * 2);
         ctx.fill();
-      } else {
+      } else { // shield
+        ctx.shadowColor = '#27ff8a';
+        ctx.shadowBlur = 16;
         ctx.fillStyle = '#27ff8a';
         ctx.beginPath();
         ctx.moveTo(c.x, c.y - c.r);
@@ -644,6 +755,36 @@
       }
       ctx.restore();
     }
+  }
+
+  function drawStar(cx, cy, outer, inner, points) {  // v0.0.5 — polygon star helper
+    ctx.beginPath();
+    for (let i = 0; i < points * 2; i++) {
+      const a = (Math.PI / points) * i - Math.PI / 2;
+      const r = (i % 2 === 0) ? outer : inner;
+      const px = cx + Math.cos(a) * r;
+      const py = cy + Math.sin(a) * r;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+  }
+
+  function drawMagnetHud() {                    // v0.0.5 — small magnet timer bar
+    if (magnetTimer <= 0) return;
+    const bw = 150, bh = 8;
+    const bx = (W - bw) / 2;
+    const by = 14;
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(bx - 3, by - 3, bw + 6, bh + 6);
+    ctx.fillStyle = '#b14dff';
+    ctx.fillRect(bx, by, (magnetTimer / MAGNET_DURATION) * bw, bh);
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = '600 11px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('MAGNET ' + magnetTimer.toFixed(1) + 's', W / 2, by + bh + 14);
+    ctx.restore();
   }
 
   function roundRect(x, y, w, h, r) {
@@ -799,6 +940,7 @@
       ctx.fillRect(0, 0, W, H);
     }
     ctx.restore();
+    drawMagnetHud();              // v0.0.5 — steady magnet timer bar (no shake)
   }
 
   /* ---------- Loop ---------- */
@@ -834,6 +976,10 @@
     boostCooldown = 0;
     nextObstacleDist = 440;
     nextCoreDist = 240;
+    nextCoinDist = 200;            // v0.0.5 — first coins appear quickly
+    magnetSpawnTimer = MAGNET_INTERVAL;   // v0.0.5 — first magnet ~25s in
+    magnetTimer = 0;
+    milestonesHit = {};
     screenShake = 0;
     flashAlpha = 0;
     updateHullPips();
@@ -966,3 +1112,8 @@
   window.addEventListener('orientationchange', resize);
   requestAnimationFrame(loop);
 })();
+// ---- v0.0.4 gamekit wiring ----
+if (window.GK) {
+  GK.help({ title: "Nightshift Runner", objective: "Run through the night city. Jump and slide past obstacles.", controls: ["Touch: tap = jump, swipe down = slide","Space: jump (double/triple in air)","Down / S: slide","P: pause","F: fullscreen"], tips: "Chain jumps for distance bonuses." });
+  GK.exposeState(function () { try { return { score: (window.S && window.S.score) || window.score || 0, mode: (window.S && window.S.mode) || 'play', wave: (window.S && window.S.wave) || 0 }; } catch (e) { return {}; } });
+}
