@@ -1112,8 +1112,11 @@
   window.addEventListener('orientationchange', resize);
   requestAnimationFrame(loop);
 })();
-// ---- v0.0.4 gamekit wiring ----
+// ---- v0.0.5 gamekit wiring (splash + menu + stats + leaderboard + auto-update) ----
 if (window.GK) {
-  GK.help({ title: "Nightshift Runner", objective: "Run through the night city. Jump and slide past obstacles.", controls: ["Touch: tap = jump, swipe down = slide","Space: jump (double/triple in air)","Down / S: slide","P: pause","F: fullscreen"], tips: "Chain jumps for distance bonuses." });
+  GK.boot({ title: "Nightshift Runner", tagline: "Endless night runner", theme: "#0a0a12" });
+  GK.help({ title: "Nightshift Runner", objective: "Run through the night city. Jump and slide past obstacles.", controls: ["Touch: tap = jump, swipe down = slide","Space: jump (double/triple in air)","Down / S: slide","P: pause","F: fullscreen"], tips: "Collect coins; Magnet powerup pulls them in." });
   GK.exposeState(function () { try { return { score: (window.S && window.S.score) || window.score || 0, mode: (window.S && window.S.mode) || 'play', wave: (window.S && window.S.wave) || 0 }; } catch (e) { return {}; } });
+  GK._manualRecord = false;
+  setTimeout(function () { GK.ready(); }, 600);
 }
