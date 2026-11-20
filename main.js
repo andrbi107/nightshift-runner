@@ -25,7 +25,7 @@
   const MAX_SPEED = 760;
   const SPEED_K = 0.022;         // speed grows with distance
   const GRAVITY = 2300;          // px / sec^2
-  const JUMP_VEL = -980;         // initial jump velocity
+  const JUMP_VEL = -760;         // v0.0.3 — lower jump height (~126px), 3 jumps instead
   const SLIDE_TIME = 0.6;        // seconds
   const HULL_MAX = 3;
   const INVULN_TIME = 1.0;       // seconds of blink i-frames after a hit
@@ -178,7 +178,7 @@
       y: groundY,
       vy: 0,
       onGround: true,
-      jumpsLeft: 2,                  // v0.0.2 — double-jump budget
+      jumpsLeft: 3,                  // v0.0.3 — triple-jump budget
       sliding: false,
       slideTimer: 0,
       invuln: 0,
@@ -201,9 +201,10 @@
   function jump() {
     if (state !== 'playing') return;
     if (runner.sliding) { runner.sliding = false; runner.slideTimer = 0; }
-    // v0.0.2 — double-jump: 2 jumps per ground touch (1st full, 2nd 85% power)
+    // v0.0.3 — triple-jump: 3 jumps per ground touch, decaying power (1st full, 2nd 82%, 3rd 68%)
     if (runner.jumpsLeft > 0) {
-      runner.vy = runner.onGround ? JUMP_VEL : JUMP_VEL * 0.85;
+      const mult = runner.onGround ? 1 : (runner.jumpsLeft >= 2 ? 0.82 : 0.68);
+      runner.vy = JUMP_VEL * mult;
       runner.onGround = false;
       runner.jumpsLeft--;
       if (window.MUX) MUX.bump();
@@ -230,7 +231,7 @@
         runner.y = groundY;
         runner.vy = 0;
         runner.onGround = true;
-        runner.jumpsLeft = 2;        // v0.0.2 — refill double-jump on landing
+        runner.jumpsLeft = 3;        // v0.0.3 — refill triple-jump on landing
       }
     }
     if (runner.sliding) {

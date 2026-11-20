@@ -1,5 +1,5 @@
 /* Nightshift Runner service worker — precache shell, offline fallback */
-const CACHE = 'nightshift-runner-v2';
+const CACHE = 'nightshift-runner-v3';
 const ASSETS = [
   './',
   './index.html', './mobile-ux.js',

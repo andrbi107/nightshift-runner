@@ -2,10 +2,10 @@
 
 > یک runner بی‌پایان نئون-سایبرپانک side-scroller با فیزیک jump/slide/boost و حفاظ hull — PWA با Vanilla JS.
 
-[![Version](https://img.shields.io/badge/version-v0.0.2-blue)](https://github.com/andrbi107/nightshift-runner/releases/tag/v0.0.2) [![PWA](https://img.shields.io/badge/PWA-installable-purple)](https://andrbi107.github.io/nightshift-runner/) [![No deps](https://img.shields.io/badge/dependencies-none-success)](https://github.com/andrbi107/nightshift-runner) [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![Version](https://img.shields.io/badge/version-v0.0.3-blue)](https://github.com/andrbi107/nightshift-runner/releases/tag/v0.0.3) [![PWA](https://img.shields.io/badge/PWA-installable-purple)](https://andrbi107.github.io/nightshift-runner/) [![No deps](https://img.shields.io/badge/dependencies-none-success)](https://github.com/andrbi107/nightshift-runner) [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
 🎮 **[بازی کن](https://andrbi107.github.io/nightshift-runner/)** — نسخه‌ی آنلاین روی GitHub Pages
-📦 **[مخزن گیت‌هاب](https://github.com/andrbi107/nightshift-runner)** · 🏷️ **[Release v0.0.2](https://github.com/andrbi107/nightshift-runner/releases/tag/v0.0.2)**
+📦 **[مخزن گیت‌هاب](https://github.com/andrbi107/nightshift-runner)** · 🏷️ **[Release v0.0.3](https://github.com/andrbi107/nightshift-runner/releases/tag/v0.0.3)**
 
 ---
 
@@ -14,6 +14,12 @@
 **Nightshift Runner** — double-jump: هر بار روی زمین، ۲ پرش در دسترس (پرش دوم ۸۵٪ قدر). haptic روی jump/damage/game-over.
 
 **همه‌ی بازی‌ها** — `mobile-ux.js` مشترک (haptics/install prompt/version stamp) + cache sw.js به v2.
+
+---
+
+## تغییرات v0.0.3 (جدید)
+
+**Nightshift Runner** — ارتفاع پرش کمتر شد (۱۲۶px) ولی تعداد پرش به ۳ رسید (با قدرت کاهشی ۱→۰.۸۲→۰.۶۸).
 
 ---
 
